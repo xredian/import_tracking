@@ -31,6 +31,22 @@ def collect_imports(directory=os.getcwd()):
     return list(set(imports))
 
 
+def enumeration(lst):
+    imports = []
+    for item in lst:
+        if item.find(' as ') == -1:
+            imports.append(item.split(', '))
+        else:
+            imports.append(item[:item.find(' as ')])
+    flatten = []
+    for lst in imports:
+        if type(lst) == str:
+            flatten.append(lst)
+        else:
+            flatten.extend(lst)
+    return flatten
+
+
 def collect_uninstalled_modules(imports, not_installed=None):
     """
     Displays a list of uninstalled modules
@@ -66,6 +82,9 @@ def is_installed(imports):
 
 
 if args.debug:
-    print(collect_uninstalled_modules(collect_imports()))
+    print(collect_uninstalled_modules(enumeration(collect_imports())))
 else:
-    print(is_installed(collect_imports()))
+    print(is_installed(enumeration(collect_imports())))
+
+
+
