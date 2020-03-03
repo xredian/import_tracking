@@ -1,5 +1,12 @@
 import os
 import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--debug',
+                    help='displays lists of uninstalled modules',
+                    action='store_true')
+args = parser.parse_args()
 
 
 def collect_imports(directory=os.getcwd()):
@@ -51,12 +58,13 @@ def is_installed(imports: list):
     for imp in imports:
         try:
             __import__(imp)
-            # print(f'{str(imp)}: Module was installed')
         except ModuleNotFoundError:
             sys.tracebacklimit = 0
-            raise
+            raise ModuleNotFoundError()
     return print('OK')
 
 
-print(collect_uninstalled_modules(collect_imports()))
-print(is_installed(collect_imports()))
+if args.debug:
+    print(collect_uninstalled_modules(collect_imports()))
+else:
+    print(is_installed(collect_imports()))
